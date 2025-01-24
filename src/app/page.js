@@ -1,13 +1,25 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 export default function GuessWho() {
   const [namesInput, setNamesInput] = useState("");
   const [people, setPeople] = useState([]);
   const [selectedPerson, setSelectedPerson] = useState(null);
   const [eliminated, setEliminated] = useState([]);
+  const [darkMode, setDarkMode] = useState(false);
 
-  // Utility function to shuffle an array
+  // Detect system dark mode preference
+  useEffect(() => {
+    const prefersDark = window.matchMedia(
+      "(prefers-color-scheme: dark)"
+    ).matches;
+    setDarkMode(prefersDark);
+  }, []);
+
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+  };
+
   const shuffleArray = (array) => {
     return array
       .map((value) => ({ value, sort: Math.random() }))
@@ -67,7 +79,7 @@ export default function GuessWho() {
       "Parham",
       "Fred",
       "Alexander",
-      "Mohamed",
+      "Mohammed",
       "Kerri",
       "Cynthia",
       "Pratibha",
@@ -92,14 +104,39 @@ export default function GuessWho() {
     }
   };
 
+  const darkModeStyles = {
+    backgroundColor: darkMode ? "#121212" : "#ffffff",
+    color: darkMode ? "#ffffff" : "#000000",
+    borderColor: darkMode ? "#444" : "#ccc",
+  };
+
   return (
     <div
       style={{
         padding: "20px",
         fontFamily: "Arial, sans-serif",
         textAlign: "center",
+        backgroundColor: darkMode ? "#121212" : "#ffffff",
+        color: darkMode ? "#ffffff" : "#000000",
+        minHeight: "100vh",
       }}
     >
+      <button
+        onClick={toggleDarkMode}
+        style={{
+          marginBottom: "20px",
+          padding: "10px 20px",
+          fontSize: "16px",
+          backgroundColor: darkMode ? "#444" : "#007BFF",
+          color: "#ffffff",
+          border: "none",
+          borderRadius: "5px",
+          cursor: "pointer",
+        }}
+      >
+        Toggle {darkMode ? "Light" : "Dark"} Mode
+      </button>
+
       <h1
         style={{
           fontSize: "24px",
@@ -144,8 +181,11 @@ export default function GuessWho() {
             style={{
               padding: "8px",
               fontSize: "16px",
-              border: "1px solid #ccc",
+              border: "1px solid",
               borderRadius: "4px",
+              backgroundColor: darkMode ? "#333" : "#fff",
+              color: darkMode ? "#fff" : "#000",
+              borderColor: darkMode ? "#444" : "#ccc",
             }}
           />
           <button
@@ -205,9 +245,11 @@ export default function GuessWho() {
             style={{
               padding: "8px",
               fontSize: "16px",
-              border: "1px solid #ccc",
+              border: "1px solid",
               borderRadius: "4px",
-              width: "200px",
+              backgroundColor: darkMode ? "#333" : "#fff",
+              color: darkMode ? "#fff" : "#000",
+              borderColor: darkMode ? "#444" : "#ccc",
             }}
           >
             <option value="">Select a person</option>
@@ -219,15 +261,7 @@ export default function GuessWho() {
           </select>
         </div>
       )}
-      {/* Selected Person Display */}
-      {selectedPerson && (
-        <p style={{ marginTop: "20px", fontSize: "18px" }}>
-          Your person:{" "}
-          <span style={{ fontWeight: "bold", color: "#007BFF" }}>
-            {people.find((p) => p.id === selectedPerson)?.name}
-          </span>
-        </p>
-      )}
+
       {/* Name grid */}
       {people.length > 0 && (
         <div
@@ -235,7 +269,7 @@ export default function GuessWho() {
             display: "grid",
             gridTemplateColumns: "repeat(6, 1fr)",
             gap: "10px",
-            maxWidth: "800px",
+            maxWidth: "1200px",
             margin: "0 auto",
           }}
         >
@@ -245,14 +279,14 @@ export default function GuessWho() {
               style={{
                 padding: "20px",
                 height: "80px",
-                border: "1px solid black",
+                border: "1px solid",
                 borderRadius: "8px",
                 textAlign: "center",
                 position: "relative",
                 cursor: "pointer",
-                backgroundColor:
-                  selectedPerson === person.id ? "#D0E8FF" : "white",
-                opacity: eliminated.includes(person.id) ? 0.5 : 1,
+                backgroundColor: darkMode ? "#333" : "#fff",
+                color: darkMode ? "#fff" : "#000",
+                borderColor: darkMode ? "#444" : "#ccc",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
