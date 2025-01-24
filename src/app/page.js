@@ -7,15 +7,25 @@ export default function GuessWho() {
   const [selectedPerson, setSelectedPerson] = useState(null);
   const [eliminated, setEliminated] = useState([]);
 
+  // Utility function to shuffle an array
+  const shuffleArray = (array) => {
+    return array
+      .map((value) => ({ value, sort: Math.random() }))
+      .sort((a, b) => a.sort - b.sort)
+      .map(({ value }) => value);
+  };
+
   const handleAddNames = () => {
     const namesArray = namesInput
       .split(",")
       .map((name) => name.trim())
       .filter((name) => name !== "");
-    const uniquePeople = namesArray.map((name, index) => ({
-      id: index + 1,
-      name,
-    }));
+    const uniquePeople = shuffleArray(
+      namesArray.map((name, index) => ({
+        id: index + 1,
+        name,
+      }))
+    );
     setPeople(uniquePeople);
     setNamesInput("");
     setSelectedPerson(null);
@@ -52,10 +62,12 @@ export default function GuessWho() {
       "Vedant",
       "Danny",
     ];
-    const uniquePeople = cssuNames.map((name, index) => ({
-      id: index + 1,
-      name,
-    }));
+    const uniquePeople = shuffleArray(
+      cssuNames.map((name, index) => ({
+        id: index + 1,
+        name,
+      }))
+    );
     setPeople(uniquePeople);
     setSelectedPerson(null);
     setEliminated([]);
@@ -70,78 +82,108 @@ export default function GuessWho() {
   };
 
   return (
-    <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
+    <div
+      style={{
+        padding: "20px",
+        fontFamily: "Arial, sans-serif",
+        textAlign: "center",
+      }}
+    >
       <h1
-        style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "20px" }}
+        style={{
+          fontSize: "24px",
+          fontWeight: "bold",
+          marginBottom: "20px",
+        }}
       >
         Guess Who
       </h1>
 
       {/* Input for Adding Names */}
-      <div style={{ marginBottom: "20px" }}>
+      <div
+        style={{
+          marginBottom: "20px",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
         <label
           htmlFor="names-input"
           style={{
-            marginRight: "10px",
             fontSize: "18px",
             fontWeight: "bold",
+            marginBottom: "10px",
           }}
         >
           Enter names (comma-separated):
         </label>
-        <input
-          id="names-input"
-          value={namesInput}
-          onChange={(e) => setNamesInput(e.target.value)}
-          placeholder="e.g., Alice, Bob, Charlie"
+        <div
           style={{
-            padding: "8px",
-            fontSize: "16px",
-            border: "1px solid #ccc",
-            borderRadius: "4px",
-            marginRight: "10px",
-          }}
-        />
-        <button
-          onClick={handleAddNames}
-          style={{
-            padding: "8px 12px",
-            fontSize: "16px",
-            backgroundColor: "#007BFF",
-            color: "white",
-            border: "none",
-            borderRadius: "5px",
-            cursor: "pointer",
-            marginRight: "10px",
+            display: "flex",
+            justifyContent: "center",
+            gap: "10px",
           }}
         >
-          Add Names
-        </button>
-        <button
-          onClick={handleGenerateCSSUNames}
-          style={{
-            padding: "8px 12px",
-            fontSize: "16px",
-            backgroundColor: "#28A745",
-            color: "white",
-            border: "none",
-            borderRadius: "5px",
-            cursor: "pointer",
-          }}
-        >
-          CSSU
-        </button>
+          <input
+            id="names-input"
+            value={namesInput}
+            onChange={(e) => setNamesInput(e.target.value)}
+            placeholder="e.g., Alice, Bob, Charlie"
+            style={{
+              padding: "8px",
+              fontSize: "16px",
+              border: "1px solid #ccc",
+              borderRadius: "4px",
+            }}
+          />
+          <button
+            onClick={handleAddNames}
+            style={{
+              padding: "8px 12px",
+              fontSize: "16px",
+              backgroundColor: "#007BFF",
+              color: "white",
+              border: "none",
+              borderRadius: "5px",
+              cursor: "pointer",
+            }}
+          >
+            Add Names
+          </button>
+          <button
+            onClick={handleGenerateCSSUNames}
+            style={{
+              padding: "8px 12px",
+              fontSize: "16px",
+              backgroundColor: "#28A745",
+              color: "white",
+              border: "none",
+              borderRadius: "5px",
+              cursor: "pointer",
+            }}
+          >
+            CSSU
+          </button>
+        </div>
       </div>
 
       {/* Dropdown for selecting your person */}
       {people.length > 0 && (
-        <div style={{ marginBottom: "20px" }}>
+        <div
+          style={{
+            marginBottom: "20px",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
           <label
             htmlFor="select-person"
             style={{
-              marginRight: "10px",
               fontSize: "18px",
               fontWeight: "bold",
+              marginBottom: "10px",
             }}
           >
             Choose your person:
@@ -154,6 +196,7 @@ export default function GuessWho() {
               fontSize: "16px",
               border: "1px solid #ccc",
               borderRadius: "4px",
+              width: "200px",
             }}
           >
             <option value="">Select a person</option>
@@ -165,15 +208,23 @@ export default function GuessWho() {
           </select>
         </div>
       )}
-
+      {/* Selected Person Display */}
+      {selectedPerson && (
+        <p style={{ marginTop: "20px", fontSize: "18px" }}>
+          Your person:{" "}
+          <span style={{ fontWeight: "bold", color: "#007BFF" }}>
+            {people.find((p) => p.id === selectedPerson)?.name}
+          </span>
+        </p>
+      )}
       {/* Name grid */}
       {people.length > 0 && (
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(2, 1fr)",
+            gridTemplateColumns: "repeat(4, 1fr)",
             gap: "10px",
-            maxWidth: "400px",
+            maxWidth: "800px",
             margin: "0 auto",
           }}
         >
@@ -181,7 +232,8 @@ export default function GuessWho() {
             <div
               key={person.id}
               style={{
-                padding: "10px",
+                padding: "20px",
+                height: "80px",
                 border: "1px solid black",
                 borderRadius: "8px",
                 textAlign: "center",
@@ -190,6 +242,9 @@ export default function GuessWho() {
                 backgroundColor:
                   selectedPerson === person.id ? "#D0E8FF" : "white",
                 opacity: eliminated.includes(person.id) ? 0.5 : 1,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
               }}
               onClick={() => handleToggleElimination(person.id)}
             >
@@ -216,16 +271,6 @@ export default function GuessWho() {
             </div>
           ))}
         </div>
-      )}
-
-      {/* Selected Person Display */}
-      {selectedPerson && (
-        <p style={{ marginTop: "20px", fontSize: "18px" }}>
-          Your person:{" "}
-          <span style={{ fontWeight: "bold", color: "#007BFF" }}>
-            {people.find((p) => p.id === selectedPerson)?.name}
-          </span>
-        </p>
       )}
     </div>
   );
