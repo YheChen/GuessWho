@@ -62,6 +62,16 @@ export default function GuessWho() {
       "Vedant",
       "Danny",
       "Hannah",
+      "Yeong Jae",
+      "Robyn",
+      "Parham",
+      "Fred",
+      "Alexander",
+      "Mohammed",
+      "Kerri",
+      "Cynthia",
+      "Pratibha",
+      "Chris",
     ];
     const uniquePeople = shuffleArray(
       cssuNames.map((name, index) => ({
@@ -223,7 +233,7 @@ export default function GuessWho() {
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(4, 1fr)",
+            gridTemplateColumns: "repeat(6, 1fr)",
             gap: "10px",
             maxWidth: "800px",
             margin: "0 auto",
