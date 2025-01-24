@@ -79,7 +79,7 @@ export default function GuessWho() {
       "Parham",
       "Fred",
       "Alexander",
-      "Mohammed",
+      "Mohamed",
       "Kerri",
       "Cynthia",
       "Pratibha",
