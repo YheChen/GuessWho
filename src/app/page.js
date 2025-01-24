@@ -1,101 +1,232 @@
-import Image from "next/image";
+"use client";
+import React, { useState } from "react";
 
-export default function Home() {
+export default function GuessWho() {
+  const [namesInput, setNamesInput] = useState("");
+  const [people, setPeople] = useState([]);
+  const [selectedPerson, setSelectedPerson] = useState(null);
+  const [eliminated, setEliminated] = useState([]);
+
+  const handleAddNames = () => {
+    const namesArray = namesInput
+      .split(",")
+      .map((name) => name.trim())
+      .filter((name) => name !== "");
+    const uniquePeople = namesArray.map((name, index) => ({
+      id: index + 1,
+      name,
+    }));
+    setPeople(uniquePeople);
+    setNamesInput("");
+    setSelectedPerson(null);
+    setEliminated([]);
+  };
+
+  const handleGenerateCSSUNames = () => {
+    const cssuNames = [
+      "Avi Sr",
+      "Avi Jr",
+      "Chen",
+      "Jace",
+      "Jerry",
+      "Emerson",
+      "Daniel",
+      "Adi R",
+      "Adi G",
+      "Loukos",
+      "Adrien",
+      "Zach",
+      "Ben",
+      "Sayan",
+      "Clarina",
+      "Colin",
+      "Shanaya",
+      "Edison",
+      "Jamie",
+      "Mayak",
+      "Michael",
+      "Jason",
+      "Hrithik",
+      "Ryan",
+      "Aleks",
+      "Vedant",
+      "Danny",
+    ];
+    const uniquePeople = cssuNames.map((name, index) => ({
+      id: index + 1,
+      name,
+    }));
+    setPeople(uniquePeople);
+    setSelectedPerson(null);
+    setEliminated([]);
+  };
+
+  const handleToggleElimination = (id) => {
+    if (eliminated.includes(id)) {
+      setEliminated(eliminated.filter((el) => el !== id)); // Remove X
+    } else {
+      setEliminated([...eliminated, id]); // Add X
+    }
+  };
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.js
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
+      <h1
+        style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "20px" }}
+      >
+        Guess Who
+      </h1>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+      {/* Input for Adding Names */}
+      <div style={{ marginBottom: "20px" }}>
+        <label
+          htmlFor="names-input"
+          style={{
+            marginRight: "10px",
+            fontSize: "18px",
+            fontWeight: "bold",
+          }}
+        >
+          Enter names (comma-separated):
+        </label>
+        <input
+          id="names-input"
+          value={namesInput}
+          onChange={(e) => setNamesInput(e.target.value)}
+          placeholder="e.g., Alice, Bob, Charlie"
+          style={{
+            padding: "8px",
+            fontSize: "16px",
+            border: "1px solid #ccc",
+            borderRadius: "4px",
+            marginRight: "10px",
+          }}
+        />
+        <button
+          onClick={handleAddNames}
+          style={{
+            padding: "8px 12px",
+            fontSize: "16px",
+            backgroundColor: "#007BFF",
+            color: "white",
+            border: "none",
+            borderRadius: "5px",
+            cursor: "pointer",
+            marginRight: "10px",
+          }}
+        >
+          Add Names
+        </button>
+        <button
+          onClick={handleGenerateCSSUNames}
+          style={{
+            padding: "8px 12px",
+            fontSize: "16px",
+            backgroundColor: "#28A745",
+            color: "white",
+            border: "none",
+            borderRadius: "5px",
+            cursor: "pointer",
+          }}
+        >
+          CSSU
+        </button>
+      </div>
+
+      {/* Dropdown for selecting your person */}
+      {people.length > 0 && (
+        <div style={{ marginBottom: "20px" }}>
+          <label
+            htmlFor="select-person"
+            style={{
+              marginRight: "10px",
+              fontSize: "18px",
+              fontWeight: "bold",
+            }}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            Choose your person:
+          </label>
+          <select
+            id="select-person"
+            onChange={(e) => setSelectedPerson(Number(e.target.value))}
+            style={{
+              padding: "8px",
+              fontSize: "16px",
+              border: "1px solid #ccc",
+              borderRadius: "4px",
+            }}
           >
-            Read our docs
-          </a>
+            <option value="">Select a person</option>
+            {people.map((person) => (
+              <option key={person.id} value={person.id}>
+                {person.name}
+              </option>
+            ))}
+          </select>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+      )}
+
+      {/* Name grid */}
+      {people.length > 0 && (
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(2, 1fr)",
+            gap: "10px",
+            maxWidth: "400px",
+            margin: "0 auto",
+          }}
         >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+          {people.map((person) => (
+            <div
+              key={person.id}
+              style={{
+                padding: "10px",
+                border: "1px solid black",
+                borderRadius: "8px",
+                textAlign: "center",
+                position: "relative",
+                cursor: "pointer",
+                backgroundColor:
+                  selectedPerson === person.id ? "#D0E8FF" : "white",
+                opacity: eliminated.includes(person.id) ? 0.5 : 1,
+              }}
+              onClick={() => handleToggleElimination(person.id)}
+            >
+              {person.name}
+              {eliminated.includes(person.id) && (
+                <div
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: "100%",
+                    height: "100%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    color: "red",
+                    fontSize: "24px",
+                    fontWeight: "bold",
+                  }}
+                >
+                  X
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Selected Person Display */}
+      {selectedPerson && (
+        <p style={{ marginTop: "20px", fontSize: "18px" }}>
+          Your person:{" "}
+          <span style={{ fontWeight: "bold", color: "#007BFF" }}>
+            {people.find((p) => p.id === selectedPerson)?.name}
+          </span>
+        </p>
+      )}
     </div>
   );
 }
