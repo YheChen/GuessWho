@@ -87,7 +87,7 @@ export default function GuessWho() {
       "Ozan",
       "Zehao",
       "Jimmy",
-      "Cecil",
+      "Shivraj",
     ];
     const uniquePeople = shuffleArray(
       cssuNames.map((name, index) => ({
